@@ -251,10 +251,10 @@ class messupChat {
 					$mtxt .= $line['time'].' - '.$line['name'].': '.$line['message']."\n";
 				}
 			}
-			$header = 'From: mail@line5.tv' . "\r\n" .
-					'Reply-To: mail@line5.tv'."\r\n".
+			$header = 'From: '.$this->_gl['mail']['senderAddress'] . "\r\n" .
+					'Reply-To: '.$this->_gl['mail']['senderAddress']."\r\n".
 					'Content-Type: text/text; charset=UTF-8';
-			mail('mail@line5.tv', 'Chat Protocol', $mtxt, $header);
+			mail($this->_gl['mail']['senderAddress'], 'Chat Protocol', $mtxt, $header);
 			// TODO: filename = sid should be safe!!!
 			unlink($filename);
 			echo json_encode(array('ps' => $_POST, 'form' => $_POST['form']));
