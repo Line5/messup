@@ -8,6 +8,13 @@
  * https://github.com/Line5/messup
  *
  * Chat data is stored in Sessions. No database needed.
+ * All the server-side code is within this file. It might be 
+ * easier for programmers to use different files, but for 
+ * the admin who needs to install the whole thing, it might be 
+ * easier to just use this, one file.
+ * 
+ * More information: http://code.google.com/p/messupclientwin
+ * Twitter: https://twitter.com/MessupChat
  */
 include_once('config.php');
 
@@ -32,25 +39,38 @@ class messupChat {
 	public function handleRequest() {
 		if ($_GET['type'] == 'ajax') {
 			if ($_SESSION['isAgent'] == 1) {
+				/* The <agentonline> file exists only if an agent
+				 * is online. Hence if the current request is caused by
+				 * an agent, we need to "touch" that file (= update its timestamp).
+				 */				
 				touch($this->_gl['chatfilepath'].'agentonline');
 			}
+			/*
+			 * The *form* field of the post request tells us the requested action. 
+			 */
 			switch($_POST['form']) {
 				case 'checkmsg':
+					// check for new messages and return them
 					$this->showConversation($_POST['latestMessage']);
 					break;
 				case 'endchat':
+					// end a conversation (= delete file on server)
 					$this->endConversation();
 					break;
 				case 'newchat':
+					// create a conversation
 					$this->startConversation();
 					break;
 				case 'sendmsg':
+					// send a message
 					$this->sendMessage();
 					break;
 				case 'agentlogin':
+					// try to login an agent
 					$this->loginAgent();
 					break;
 				case 'newchats':
+					// agents only: returns a list of all chats
 					if ($_SESSION['isAgent'] == 1) {
 						$this->returnChatList();
 					} else {
@@ -58,6 +78,7 @@ class messupChat {
 					}
 					break;
 				case 'assignagent':
+					// not implemented yet ... should assign an agent to a chat.
 					if ($_SESSION['isAgent'] == 1) {
 						$this->assignChat($_POST['convid'], $_SESSION['agent']['id']);
 					} else {
@@ -67,7 +88,6 @@ class messupChat {
 
 			}
 			$ans['err'] = $this->_err;
-
 		}
 	}
 
