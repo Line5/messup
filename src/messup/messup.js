@@ -1,4 +1,6 @@
 /*
+ * 2013-05-19
+ * 
  * Integrates support/sales chat functionality into any website.
  * Line5 e.K.
  * http://www.line5.eu
@@ -8,7 +10,8 @@
  *
  * Chat data is stored in Sessions. No database needed.
  * 
- * Requires JQuery! Tested with version 1.9.1
+ * Requires JQuery! Tested with versions 1.5-1.9
+ * 
  */
 
 ;
@@ -79,7 +82,7 @@
 			 * event handling for mouseclicks
 			 */
 			// switch on / off chat window
-			$('#messupChatButton').on('click', function(event) {
+			$('#messupChatButton').bind('click', function(event) {
 				if (agentIsOnline == true) {
 					$('#messupWindow').toggle();
 					if ($('#messupWindow').is(':visible')) {
@@ -102,10 +105,9 @@
 
 			// catch all form submissions. submit via ajax.
 			var self = this;
-			$('#messupChat')
-					.on(
+			$('#messupChat form')
+					.bind(
 							'submit',
-							'form',
 							function(event) {
 								var url = scripturl + '?type=ajax';
 								var data = $(this).serializeArray();
